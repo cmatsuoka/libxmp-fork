@@ -139,13 +139,19 @@ dnl https://github.com/libxmp/libxmp/issues/385
    if test $ac_cv_c_flag_w_all = yes; then
       CFLAGS="${CFLAGS} -Werror"
    fi
-   XMP_TRY_COMPILE(whether compiler understands externally_visible attribute,
+   XMP_TRY_COMPILE(whether compiler understands attribute externally_visible,
     ac_cv_c_attribute_visibility_external,[],[
 __attribute__((visibility("default"),externally_visible)) int foo(void);
 int foo(void) { return 0; }],
     [CFLAGS="${old_CFLAGS} -DHAVE_EXTERNAL_VISIBILITY"],
     [CFLAGS="${old_CFLAGS}"])
 fi
+
+XMP_TRY_COMPILE(whether compiler understands attribute __symver__,
+  ac_cv_c_attribute_symver,[-Werror=attributes],[
+void foo(void) __attribute__((__symver__("foo@bar")));],
+  [CFLAGS="${CFLAGS} -DHAVE_ATTRIBUTE_SYMVER"],
+  [CFLAGS="${CFLAGS}"])
 
 dnl for clang
 XMP_TRY_COMPILE(whether compiler understands -Wunknown-warning-option,
